@@ -1,0 +1,170 @@
+    <style>
+        /* Estilos personalizados para emular tipografía y transiciones nativas */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ocultar scrollbars */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        /* Animación suave para cambio de pestañas */
+        .tab-content {
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        /* Ondas de pulso para el botón SOS */
+        @keyframes pulse-red {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .animate-pulse-red {
+            animation: pulse-red 2s infinite;
+        }
+
+        /* Animación de confeti/celebración al tomar medicina */
+        @keyframes success-pop {
+            0% { transform: scale(0.9); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-success-pop {
+            animation: success-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen">
+
+    <!-- Contenedor Principal con estilo de Smartphone de alta gama -->
+    <div class="relative w-full max-w-md h-[860px] bg-slate-50 rounded-[40px] shadow-2xl border-8 border-slate-800 flex flex-col justify-between overflow-hidden">
+        
+        <!-- Barra de Estado Simulada del Celular -->
+        <div class="bg-[#2B59FF] text-white px-6 pt-3 pb-1 flex justify-between items-center text-xs font-semibold z-20">
+            <span>15:59</span>
+            <div class="flex items-center gap-1.5">
+                <!-- Icono de Red -->
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L17.61 4.97C16.07 3.74 14.12 3 12 3zm5.66 3.39l-11.27 11.27C7.93 18.9 9.88 19.64 12 19.64c4.97 0 9-4.03 9-9 0-2.12-.74-4.07-1.97-5.61z"/></svg>
+                <!-- Icono de Batería -->
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17 5H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm1 9h-2v-4h2v4z"/></svg>
+            </div>
+        </div>
+
+        <!-- NOTIFICACIONES / TOASTS FLOTANTES -->
+        <div id="toast" class="absolute top-16 left-4 right-4 bg-emerald-600 text-white p-4 rounded-2xl shadow-lg flex items-center gap-3 transform -translate-y-32 opacity-0 transition-all duration-300 z-50">
+            <div class="bg-white/20 p-2 rounded-full">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div>
+                <h4 class="font-bold text-sm" id="toast-title">¡Éxito!</h4>
+                <p class="text-xs text-emerald-100" id="toast-message">Código copiado al portapapeles.</p>
+            </div>
+        </div>
+
+        <!-- CONTENEDOR DE PANTALLAS (Scrollable) -->
+        <div class="flex-1 overflow-y-auto pb-24 relative" id="app-screens">
+            
+            <!-- ================= PANTALLA 1: INICIO (HOME) ================= -->
+            <div id="screen-inicio" class="tab-content block">
+                <!-- Encabezado Amistoso e Inteligente -->
+                <div class="bg-[#2B59FF] text-white px-6 pt-6 pb-20 rounded-b-[3rem] relative shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-blue-100 text-sm font-medium">¡Hola de nuevo!</p>
+                            <h2 class="text-3xl font-extrabold tracking-tight">María García</h2>
+                        </div>
+                        <!-- Botón de SOS Emergente -->
+                        <button onclick="activarSOS()" class="bg-red-500 hover:bg-red-600 active:scale-95 text-white font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2 shadow-lg transition-all animate-pulse-red">
+                            <span class="w-3 h-3 bg-white rounded-full animate-ping"></span>
+                            SOS
+                        </button>
+                    </div>
+                    <p class="text-blue-100 text-sm leading-relaxed max-w-xs">Aquí tienes tu medicina pendiente. Tu salud está al día hoy.</p>
+                </div>
+
+                <!-- Contenido Principal -->
+                <div class="px-5 -mt-12 space-y-6 relative z-10">
+                    
+                    <!-- Tarjeta de Medicina Pendiente (Acción Principal de un Toque) -->
+                    <div id="medicina-pendiente-card" class="bg-white rounded-3xl p-6 shadow-xl border border-slate-100 transition-all">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3.5">
+                                <div class="bg-blue-50 p-3 rounded-2xl text-[#2B59FF]">
+                                    <!-- Icono Medicina -->
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12.75l6 6 9-13.5" />
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-bold text-[#2B59FF] uppercase tracking-wider bg-blue-50 px-2.5 py-1 rounded-full">Próxima toma</span>
+                                    <h3 class="text-xl font-black text-slate-800 mt-1" id="medicina-nombre">Losartán 50mg</h3>
+                                </div>
+                            </div>
+                            <span class="text-lg font-extrabold text-[#2B59FF] bg-blue-50/50 px-3 py-1.5 rounded-xl" id="medicina-hora">08:00 AM</span>
+                        </div>
+
+                        <div class="text-slate-500 text-sm mb-6 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span>Tomar con abundante agua después del desayuno.</span>
+                        </div>
+
+                        <!-- BOTÓN GIGANTE YA LO TOMÉ -->
+                        <button onclick="tomarMedicina()" id="btn-tomar" class="w-full bg-[#2B59FF] hover:bg-blue-700 active:scale-95 text-white py-5 px-6 rounded-2xl font-bold text-xl shadow-lg shadow-blue-200 transition-all flex justify-center items-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                            ¡Ya lo tomé!
+                        </button>
+                    </div>
+
+                    <!-- Estado de Cumplimiento / Progreso Diario -->
+                    <div class="bg-white rounded-3xl p-5 shadow-md border border-slate-100">
+                        <h4 class="text-sm font-bold text-slate-500 mb-3 uppercase tracking-wider">Tu Progreso de Hoy</h4>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="relative flex items-center justify-center">
+                                    <!-- Círculo de progreso SVG -->
+                                    <svg class="w-14 h-14 transform -rotate-90">
+                                        <circle cx="28" cy="28" r="24" stroke="#E2E8F0" stroke-width="5" fill="transparent" />
+                                        <circle id="progress-circle" cx="28" cy="28" r="24" stroke="#2B59FF" stroke-width="5" fill="transparent" stroke-dasharray="150.79" stroke-dashoffset="150.79" class="transition-all duration-500" />
+                                    </svg>
+                                    <span class="absolute text-xs font-black text-slate-800" id="progress-percent">0%</span>
+                                </div>
+                                <div>
+                                    <p class="font-extrabold text-slate-800 text-base" id="progress-text">0 de 3 medicinas tomadas</p>
+                                    <p class="text-xs text-slate-500">Siguiente a las 02:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estado de Ánimo interactivo -->
+                    <div class="bg-white rounded-3xl p-5 shadow-md border border-slate-100">
+                        <h4 class="text-sm font-bold text-slate-500 mb-3">¿Cómo te sientes hoy, María?</h4>
+                        <div class="grid grid-cols-4 gap-2">
+                            <button onclick="seleccionarAnimo('Muy Bien 😊')" class="p-3 bg-slate-50 rounded-2xl hover:bg-emerald-50 hover:text-emerald-600 transition-all text-center group active:scale-95">
+                                <span class="text-2xl block mb-1">😊</span>
+                                <span class="text-[10px] font-bold text-slate-500 group-hover:text-emerald-600">Muy bien</span>
+                            </button>
+                            <button onclick="seleccionarAnimo('Estable 😐')" class="p-3 bg-slate-50 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition-all text-center group active:scale-95">
+                                <span class="text-2xl block mb-1">😐</span>
+                                <span class="text-[10px] font-bold text-slate-500 group-hover:text-blue-600">Estable</span>
+                            </button>
+                            <button onclick="seleccionarAnimo('Cansada 🥱')" class="p-3 bg-slate-50 rounded-2xl hover:bg-amber-50 hover:text-amber-600 transition-all text-center group active:scale-95">
+                                <span class="text-2xl block mb-1">🥱</span>
+                                <span class="text-[10px] font-bold text-slate-500 group-hover:text-amber-600">Cansada</span>
+                            </button>
+                            <button onclick="seleccionarAnimo('Con dolor 🤕')" class="p-3 bg-slate-50 rounded-2xl hover:bg-rose-50 hover:text-rose-600 transition-all text-center group active:scale-95">
+                                <span class="text-2xl block mb-1">🤕</span>
+                                <span class="text-[10px] font-bold text-slate-500 group-hover:text-rose-600">Con dolor</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
