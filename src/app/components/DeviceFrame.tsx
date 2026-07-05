@@ -15,38 +15,38 @@ const features = [
 export function DeviceFrame() {
   return (
     <VoiceProvider>
-      <div className="min-h-[100dvh] bg-white lg:h-screen lg:overflow-hidden lg:flex lg:items-center lg:justify-center lg:gap-20 lg:px-12 lg:bg-gradient-to-br lg:from-blue-50 lg:via-white lg:to-indigo-100 font-['Plus_Jakarta_Sans',sans-serif]">
+      <div className="min-h-[100dvh] bg-white lg:h-screen lg:overflow-hidden lg:flex lg:items-center lg:justify-center lg:gap-10 xl:gap-16 lg:px-8 xl:px-12 lg:bg-gradient-to-br lg:from-blue-50 lg:via-white lg:to-indigo-100 font-['Plus_Jakarta_Sans',sans-serif]">
         {/* Panel de portafolio — solo escritorio */}
-        <aside className="hidden lg:flex flex-col max-w-lg gap-8">
+        <aside className="hidden lg:flex flex-col lg:max-w-md xl:max-w-lg min-w-0 shrink lg:gap-5 xl:gap-8 lg:max-h-[94vh] lg:overflow-y-auto lg:py-4">
           <div className="flex items-center gap-5">
             <img
               src={amayIcon}
               alt="Logo de AMAY"
-              className="w-20 h-20 rounded-[1.6rem] shadow-xl shadow-blue-600/25"
+              className="w-16 h-16 xl:w-20 xl:h-20 rounded-[1.4rem] xl:rounded-[1.6rem] shadow-xl shadow-blue-600/25"
             />
             <div>
-              <h1 className="text-5xl font-black text-slate-900 tracking-tight">AMAY</h1>
+              <h1 className="text-4xl xl:text-5xl font-black text-slate-900 tracking-tight">AMAY</h1>
               <p className="text-lg font-bold text-blue-600">Tu asistente de salud</p>
             </div>
           </div>
 
-          <p className="text-lg text-slate-600 leading-relaxed font-medium">
+          <p className="text-base xl:text-lg text-slate-600 leading-relaxed font-medium">
             Aplicación móvil pensada para <strong className="text-slate-800">adultos mayores</strong> y
             sus cuidadores: tipografía grande, alto contraste, guía por voz y acciones de un solo toque.
           </p>
 
-          <ul className="space-y-4">
+          <ul className="space-y-3 xl:space-y-4">
             {features.map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-center gap-4">
-                <span className="w-11 h-11 bg-white text-[#2B59FF] rounded-2xl flex items-center justify-center shadow-md shadow-blue-100 border border-blue-50 shrink-0">
-                  <Icon size={22} strokeWidth={2.5} />
+                <span className="w-10 h-10 xl:w-11 xl:h-11 bg-white text-[#2B59FF] rounded-2xl flex items-center justify-center shadow-md shadow-blue-100 border border-blue-50 shrink-0">
+                  <Icon size={20} strokeWidth={2.5} />
                 </span>
-                <span className="text-base font-semibold text-slate-700">{text}</span>
+                <span className="text-sm xl:text-base font-semibold text-slate-700">{text}</span>
               </li>
             ))}
           </ul>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center flex-wrap gap-2 xl:gap-3">
             {["React", "Tailwind CSS", "Vite", "Web Speech API"].map((tech) => (
               <span
                 key={tech}
@@ -74,7 +74,7 @@ export function DeviceFrame() {
               con position:fixed queden dentro del teléfono en escritorio */}
           <div className="w-full h-full bg-white relative overflow-hidden flex flex-col transform-gpu lg:rounded-[2.6rem]">
             {/* Isla dinámica */}
-            <div className="hidden lg:block absolute top-2.5 left-1/2 -translate-x-1/2 w-28 h-[26px] bg-slate-900 rounded-full z-[200] pointer-events-none" />
+            <div className="hidden lg:block absolute top-2 left-1/2 -translate-x-1/2 w-24 h-[20px] bg-slate-900 rounded-full z-[200] pointer-events-none" />
             <Outlet />
             <Toaster
               position="top-center"

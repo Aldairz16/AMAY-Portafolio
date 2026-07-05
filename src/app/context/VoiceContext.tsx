@@ -9,9 +9,10 @@ interface VoiceContextType {
 const VoiceContext = createContext<VoiceContextType | undefined>(undefined);
 
 export function VoiceProvider({ children }: { children: React.ReactNode }) {
+  // El narrador inicia apagado: el usuario lo activa cuando lo necesite
   const [isNarratorActive, setIsNarratorActive] = useState(() => {
     const saved = localStorage.getItem("amay_narrator_active");
-    return saved !== null ? JSON.parse(saved) : true;
+    return saved !== null ? JSON.parse(saved) : false;
   });
 
   useEffect(() => {
